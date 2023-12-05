@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <cmath>
 using namespace std;
 
 bool isANumber(char c)
@@ -21,14 +22,6 @@ vector<long long> numsFromString(string line, int pos)
 	{
 		space = line.find(' ', pos);
 		temp.push_back(stoull(line.substr(pos, -1)));
-		/*if (space != -1)
-		{
-			temp.push_back(stoi(line.substr(pos, space - pos)));
-		}
-		else
-		{
-			temp.push_back(stoi(line.substr(pos, line.size() - pos)));
-		}*/
 		pos = space + 1;
 	}
 	return temp;
@@ -99,8 +92,77 @@ int main() {
 		}
 		//cout << outputs[i] << endl;
 	}
-
 	cout << endl;
-	cout << minVal;
-
+	cout << minVal<<endl;
+	
+    //Part 2
+    outputs.clear();
+    for (int i = 0; i < inputs.size(); i+=2)
+	{
+	    std::cout<<"starting seed "<<i<<endl;
+	    std::cout<<"starting pos " << inputs[i]<<endl;
+	    long long root = sqrtl(inputs[i+1]);
+	    long long minim = minVal;
+	    long long minPos = inputs[i];
+	    for(long long iter = inputs[i];iter<inputs[i]+inputs[i+1]; iter+=root)
+	    {
+			long long pos = iter;
+			for (int j = 0; j < rules.size(); j++)
+			{
+				for (int k = 0; k < rules[j].size(); k++)
+				{
+					long long next = getNextPos(pos, rules[j][k]);
+					if (next != -1)
+					{
+						pos = next;
+						break;
+					}
+				}
+			}
+			if(pos<minim)
+			{
+			    minPos=iter;
+			    minim = pos;
+			}
+	    }
+	    cout<<"least root pos is " << minPos<<endl;
+	    long long nextMin=minPos;
+	    for(long long iter = minPos-(root);iter<minPos+(root); iter++)
+	    {
+	        if(iter>=inputs[i]&&iter<inputs[i]+inputs[i+1])
+	        {
+    			long long pos = iter;
+    			for (int j = 0; j < rules.size(); j++)
+    			{
+    				for (int k = 0; k < rules[j].size(); k++)
+    				{
+    					long long next = getNextPos(pos, rules[j][k]);
+    					if (next != -1)
+    					{
+    						pos = next;
+    						break;
+    					}
+    				}
+    			}
+    			if(pos<minim)
+    			{
+    			    nextMin=iter;
+    			    minim = pos;
+    			}
+	        }
+	    }
+	    cout<<"least pos is " << nextMin<<endl;
+	    outputs.push_back(minim);
+	    cout<<endl;
+	}
+	minVal = outputs[0];
+	for (int i = 0; i < outputs.size(); i++)
+	{
+		if(outputs[i] < minVal)
+		{
+			minVal = outputs[i];
+		}
+		//cout << outputs[i] << endl;
+	}
+	cout<<minVal<<endl;
 }
