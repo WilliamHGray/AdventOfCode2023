@@ -28,9 +28,7 @@ int rankHand(vector<int> hand)
 			{
 				temp++;
 			}
-			//part 2
-			
-			else if (hand[j] == 0)
+			else if (hand[j] == 0) //this checks for jokers
 			{
 				temp++;
 			}
@@ -102,6 +100,8 @@ int main() {
 	string lineN;
 	vector<vector<int>> hands;
 	vector<int> ranks, bids;
+	int jValue = 0;
+	//set jValue = 11 for part 1
 	while (getline(FileName, lineN)) {
 		vector<int>temp;
 		for (int i = 0; i < spacePos; i++)
@@ -117,8 +117,7 @@ int main() {
 					temp.push_back(10);
 					break;
 				case 'J':
-					//temp.push_back(11);
-					temp.push_back(0);
+					temp.push_back(jValue);
 					break;
 				case 'Q':
 					temp.push_back(12);
@@ -166,8 +165,8 @@ int main() {
 				cout << hands[i][j] << " ";
 			}
 			cout << "rank " << ranks[i] << endl;
-			totalCount += ((i + 1) * bids[i]);
 		}
+		totalCount += ((i + 1) * bids[i]);
 	}
 	std::cout << totalCount << endl;
 }
