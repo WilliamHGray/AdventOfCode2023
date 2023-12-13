@@ -49,16 +49,21 @@ bool assureLine(vector<string> input, int line1, int line2)
 	return true;
 }
 
-int findReflection(vector<string> input)
+int findReflection(vector<string> input, int prevAnswer = -1)
 {
 	bool foundLine = false;
 	for (int i = 1; i < input.size(); i++)
 	{
 		for (int j = 0; j < input.size(); j++)
 		{
+		    int answer = -1;
 			if (j != i && input[i] == input[j] &&assureLine(input,i,j))
 			{
-				return 100 * (((i + j) / 2) + 1);
+				answer = 100 * (((i + j) / 2) + 1);
+			}
+			if (answer != -1 && answer != prevAnswer)
+			{
+			    return answer;
 			}
 		}
 	}
@@ -67,9 +72,14 @@ int findReflection(vector<string> input)
 	{
 		for (int j = 0; j < temp.size(); j++)
 		{
+		    int answer = -1;
 			if (j != i && temp[i] == temp[j] && assureLine(temp, i, j))
 			{
-				return (((i + j) / 2) + 1);
+				answer = (((i + j) / 2) + 1);
+			}
+			if (answer != -1 && answer != prevAnswer)
+			{
+			    return answer;
 			}
 		}
 	}
@@ -95,9 +105,9 @@ int findReflectionPart2(vector<string>input,int prevAnswer)
 	{
 		for (int j = 0; j < input[0].size(); j++)
 		{
-			swapSymbol(temp, i, j);
+		    swapSymbol(temp, i, j);
 			int answer1 , answer2;
-			answer1 = (findReflection(temp));
+			answer1 = (findReflection(temp,prevAnswer));
 			//answer2 = findReflection(transpose(temp));
 			if (answer1 != -1&& answer1!=prevAnswer)
 			{
@@ -108,22 +118,6 @@ int findReflectionPart2(vector<string>input,int prevAnswer)
 			swapSymbol(temp, i, j);
 		}
 	}
-	/*for (int i = 0; i < input.size(); i++)
-	{
-		for (int j = 0; j < input[0].size(); j++)
-		{
-			swapSymbol(temp, i, j);
-			int answer1, answer2;
-			answer2 = findReflection(transpose(temp));
-			if(answer2 != -1 && answer2 != prevAnswer)
-			{
-				drawVector(transpose(temp));
-				//cout << j << ", " << i << endl;
-				return answer2;
-			}
-			swapSymbol(temp, i, j);
-		}
-	}*/
 	return -1;
 }
 
@@ -134,21 +128,25 @@ int main() {
 	string lineN;
 	vector<string> temp;
 	vector<vector<string>>inputs;
+	int size = 0;
 	while (getline(FileName, lineN)) {
-		if (lineN.size() == 0)
+		if (lineN.size() < 2)
 		{
 			inputs.push_back(temp);
 			temp.clear();
+			size = 0;
 		}
 		else
 		{
-			temp.push_back(lineN);
+		    if(size == 0)
+		    {
+		        size = lineN.size()-1;
+		    }
+			temp.push_back(lineN.substr(0,size));
 		}
 	}
 	inputs.push_back(temp);
-
 	vector<int>prevAnswer;
-
 	for (int i = 0; i < inputs.size(); i++)
 	{
 		int answer = findReflection(inputs[i]);
